@@ -25,7 +25,7 @@ fetch("drivers.json")
         { title: "SR Sportscar" },
         { title: "Licens Sportscar" }
       ],
-      pageLength: 25,
+      pageLength: 100,
       order: [[2, "desc"]], // Sorter standard på iRating Formel
     });
   })
