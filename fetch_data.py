@@ -25,10 +25,9 @@ updated_drivers = []
 
 for d in drivers:
     cid = d["cust_id"]
-    name = d.get("name", "")
     try:
         member = idc.member(cust_id=cid)
-        name = member.get("display_name", name)
+        name = member.get("display_name", f"Driver {cid}")  # Hent navn fra API
 
         entry = {"cust_id": cid, "name": name}
 
