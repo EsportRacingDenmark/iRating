@@ -10,17 +10,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
+
       - name: Install dependencies
         run: pip install iracingdataapi
+
       - name: Run script
         env:
           IR_USERNAME: ${{ secrets.IR_USERNAME }}
           IR_PASSWORD: ${{ secrets.IR_PASSWORD }}
         run: python fetch_data.py
+
       - name: Commit changes
         run: |
           git config --global user.name "github-actions"
