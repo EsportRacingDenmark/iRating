@@ -2,7 +2,7 @@ name: Update Driver Data
 
 on:
   schedule:
-    - cron: "0 3 * * *"   # kører hver dag kl. 03:00 UTC
+    - cron: "0 * * * *"   # kører hver time
   workflow_dispatch:
 
 jobs:
