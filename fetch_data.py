@@ -1,19 +1,18 @@
 import os
-import pandas as pd
+import json
 from iracingdataapi.client import irDataClient
 
-# Login via secrets
+# Login via GitHub Secrets
 username = os.environ["IR_USERNAME"]
 password = os.environ["IR_PASSWORD"]
 
 idc = irDataClient(username, password)
 
-# Læs IDs fra Excel
-df = pd.read_excel("drivers.xlsx")
-ids = df["iRacing ID"].dropna().astype(int).tolist()
+# Læs kørere fra drivers.json
+with open("drivers.json", "r") as f:
+    drivers = json.load(f)
 
 def parse_sr(val):
-    # fx "5411" = A 4.11
     if not val:
         return None, None
     val = str(val)
@@ -22,13 +21,15 @@ def parse_sr(val):
     sr = round(int(val[1:]) / 100, 2)
     return license_class, sr
 
-all_data = []
-for cid in ids:
+updated_drivers = []
+
+for d in drivers:
+    cid = d["cust_id"]
+    name = d.get("name", "")
     try:
         member = idc.member(cust_id=cid)
-        name = member["display_name"]
+        name = member.get("display_name", name)
 
-        # Formel (6) og Sports Car (5)
         entry = {"cust_id": cid, "name": name}
 
         for cat_id, key in [(6, "formula"), (5, "sportscar")]:
@@ -41,12 +42,12 @@ for cid in ids:
 
             entry[key] = {"irating": ir, "sr": sr, "license": lic}
 
-        all_data.append(entry)
+        updated_drivers.append(entry)
+        print(f"Opdateret {name} ({cid})")
 
     except Exception as e:
         print(f"Fejl ved {cid}: {e}")
 
-# Gem JSON
-import json
+# Gem opdateret JSON
 with open("drivers.json", "w") as f:
-    json.dump(all_data, f, indent=2, ensure_ascii=False)
+    json.dump(updated_drivers, f, indent=2, ensure_ascii=False)
