@@ -26,7 +26,7 @@ fetch("drivers.json")
         { title: "Licens Sportscar" }
       ],
       pageLength: 100,
-      order: [[2, "desc"]], // Sorter standard på iRating Formel
+      order: [[5, "desc"]], // Sorter standard på iRating Sports Car
     });
   })
   .catch(err => console.error("Fejl ved indlæsning af drivers.json:", err));
